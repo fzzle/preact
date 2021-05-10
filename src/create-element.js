@@ -1,3 +1,4 @@
+import { FUNCTION } from './constants';
 import options from './options';
 
 let vnodeId = 0;
@@ -34,7 +35,7 @@ export function createElement(type, props, children) {
 
 	// If a Component VNode, check for and apply defaultProps
 	// Note: type may be undefined in development, must never error here.
-	if (typeof type == 'function' && type.defaultProps != null) {
+	if (typeof type == FUNCTION && type.defaultProps != null) {
 		for (i in type.defaultProps) {
 			if (normalizedProps[i] === undefined) {
 				normalizedProps[i] = type.defaultProps[i];

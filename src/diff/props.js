@@ -1,4 +1,4 @@
-import { IS_NON_DIMENSIONAL } from '../constants';
+import { FUNCTION, IS_NON_DIMENSIONAL } from '../constants';
 import options from '../options';
 
 /**
@@ -21,7 +21,7 @@ export function diffProps(dom, newProps, oldProps, isSvg, hydrate) {
 
 	for (i in newProps) {
 		if (
-			(!hydrate || typeof newProps[i] == 'function') &&
+			(!hydrate || typeof newProps[i] == FUNCTION) &&
 			i !== 'children' &&
 			i !== 'key' &&
 			i !== 'value' &&
@@ -131,7 +131,7 @@ export function setProperty(dom, name, value, oldValue, isSvg) {
 		// amount of exceptions would cost us too many bytes. On top of
 		// that other VDOM frameworks also always stringify `false`.
 
-		if (typeof value === 'function') {
+		if (typeof value === FUNCTION) {
 			// never serialize functions as attribute values
 		} else if (
 			value != null &&

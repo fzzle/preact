@@ -1,4 +1,4 @@
-import { EMPTY_OBJ, EMPTY_ARR } from '../constants';
+import { EMPTY_OBJ, EMPTY_ARR, FUNCTION } from '../constants';
 import { Component } from '../component';
 import { Fragment } from '../create-element';
 import { diffChildren } from './children';
@@ -52,7 +52,7 @@ export function diff(
 	if ((tmp = options._diff)) tmp(newVNode);
 
 	try {
-		outer: if (typeof newType == 'function') {
+		outer: if (typeof newType == FUNCTION) {
 			let c, isNew, oldProps, oldState, snapshot, clearProcessingException;
 			let newProps = newVNode.props;
 
@@ -457,7 +457,7 @@ function diffElementNodes(
  */
 export function applyRef(ref, value, vnode) {
 	try {
-		if (typeof ref == 'function') ref(value);
+		if (typeof ref == FUNCTION) ref(value);
 		else ref.current = value;
 	} catch (e) {
 		options._catchError(e, vnode);
@@ -495,7 +495,7 @@ export function unmount(vnode, parentVNode, skipRemove) {
 	if ((r = vnode._children)) {
 		for (let i = 0; i < r.length; i++) {
 			if (r[i]) {
-				unmount(r[i], parentVNode, typeof vnode.type != 'function');
+				unmount(r[i], parentVNode, typeof vnode.type != FUNCTION);
 			}
 		}
 	}

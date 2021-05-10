@@ -1,6 +1,6 @@
 import { diff, unmount, applyRef } from './index';
 import { createVNode, Fragment } from '../create-element';
-import { EMPTY_OBJ, EMPTY_ARR } from '../constants';
+import { EMPTY_OBJ, EMPTY_ARR, FUNCTION } from '../constants';
 import { getDomSibling } from '../component';
 
 /**
@@ -160,7 +160,7 @@ export function diffChildren(
 			}
 
 			if (
-				typeof childVNode.type == 'function' &&
+				typeof childVNode.type == FUNCTION &&
 				childVNode._children != null && // Can be null if childVNode suspended
 				childVNode._children === oldVNode._children
 			) {
@@ -194,7 +194,7 @@ export function diffChildren(
 				// @ts-ignore We have validated that the type of parentDOM is 'option'
 				// in the above check
 				parentDom.value = '';
-			} else if (typeof newParentVNode.type == 'function') {
+			} else if (typeof newParentVNode.type == FUNCTION) {
 				// Because the newParentVNode is Fragment-like, we need to set it's
 				// _nextDom property to the nextSibling of its last child DOM node.
 				//
@@ -221,7 +221,7 @@ export function diffChildren(
 	for (i = oldChildrenLength; i--; ) {
 		if (oldChildren[i] != null) {
 			if (
-				typeof newParentVNode.type == 'function' &&
+				typeof newParentVNode.type == FUNCTION &&
 				oldChildren[i]._dom != null &&
 				oldChildren[i]._dom == newParentVNode._nextDom
 			) {
@@ -253,7 +253,7 @@ function reorderChildren(childVNode, oldDom, parentDom) {
 			// (childVNode here).
 			vnode._parent = childVNode;
 
-			if (typeof vnode.type == 'function') {
+			if (typeof vnode.type == FUNCTION) {
 				oldDom = reorderChildren(vnode, oldDom, parentDom);
 			} else {
 				oldDom = placeChild(
