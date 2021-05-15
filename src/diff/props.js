@@ -54,8 +54,6 @@ function setStyle(style, key, value) {
  * @param {boolean} isSvg Whether or not this DOM node is an SVG node or not
  */
 export function setProperty(dom, name, value, oldValue, isSvg) {
-	let useCapture;
-
 	o: if (name === 'style') {
 		if (typeof value == 'string') {
 			dom.style.cssText = value;
@@ -83,23 +81,27 @@ export function setProperty(dom, name, value, oldValue, isSvg) {
 	}
 	// Benchmark for comparison: https://esbench.com/bench/574c954bdb965b9a00965ac6
 	else if (name[0] === 'o' && name[1] === 'n') {
-		useCapture = name !== (name = name.replace(/Capture$/, ''));
+		// Use `isSvg` argument for `isCapture`.
+		isSvg = name.endsWith('Capture');
+
+		// Remove 'Capture' part if `isCapture`.
+		if (isSvg) name = name.slice(0, -7);
 
 		// Infer correct casing for DOM built-in events:
-		if (name.toLowerCase() in dom) name = name.toLowerCase().slice(2);
-		else name = name.slice(2);
+		if (name.toLowerCase() in dom) name = name.toLowerCase();
+
+		// Remove 'on'.
+		name = name.slice(2);
 
 		if (!dom._listeners) dom._listeners = {};
-		dom._listeners[name + useCapture] = value;
+		dom._listeners[name + +isSvg] = value;
 
-		if (value) {
-			if (!oldValue) {
-				const handler = useCapture ? eventProxyCapture : eventProxy;
-				dom.addEventListener(name, handler, useCapture);
-			}
-		} else {
-			const handler = useCapture ? eventProxyCapture : eventProxy;
-			dom.removeEventListener(name, handler, useCapture);
+		if (!value) {
+			const handler = isSvg ? eventProxyCapture : eventProxy;
+			dom.removeEventListener(name, handler, isSvg);
+		} else if (!oldValue) {
+			const handler = isSvg ? eventProxyCapture : eventProxy;
+			dom.addEventListener(name, handler, isSvg);
 		}
 	} else if (name !== 'dangerouslySetInnerHTML') {
 		if (isSvg) {
@@ -150,9 +152,14 @@ export function setProperty(dom, name, value, oldValue, isSvg) {
  * @private
  */
 function eventProxy(e) {
-	this._listeners[e.type + false](options.event ? options.event(e) : e);
+	this._listeners[e.type + 0](options.event ? options.event(e) : e);
 }
 
+/**
+ * Proxy an event to hooked capture event handlers
+ * @param {Event} e The event object from the browser
+ * @private
+ */
 function eventProxyCapture(e) {
-	this._listeners[e.type + true](options.event ? options.event(e) : e);
+	this._listeners[e.type + 1](options.event ? options.event(e) : e);
 }
