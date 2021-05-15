@@ -90,7 +90,6 @@ export function setProperty(dom, name, value, oldValue, isSvg) {
 		name = (name.toLowerCase() in dom ? name.toLowerCase() : name).slice(2);
 
 		if (!dom._listeners) dom._listeners = {};
-		dom._listeners[name + +isSvg] = value;
 
 		if (!(dom._listeners[name + (/** @type {any} */ (isSvg) | 0)] = value)) {
 			const handler = isSvg ? eventProxyCapture : eventProxy;
