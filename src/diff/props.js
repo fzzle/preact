@@ -89,9 +89,7 @@ export function setProperty(dom, name, value, oldValue, isSvg) {
 		// Infer correct casing for DOM built-in events and remove 'on'.
 		name = (name.toLowerCase() in dom ? name.toLowerCase() : name).slice(2);
 
-		if (!dom._listeners) dom._listeners = {};
-
-		if (!(dom._listeners[name + isSvg] = value)) {
+		if (!((dom._listeners || (dom._listeners = {}))[name + isSvg] = value)) {
 			const handler = isSvg ? eventProxyCapture : eventProxy;
 			dom.removeEventListener(name, handler, isSvg);
 		} else if (!oldValue) {
