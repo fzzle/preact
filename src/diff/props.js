@@ -83,7 +83,6 @@ export function setProperty(dom, name, value, oldValue, isSvg) {
 	else if (name[0] === 'o' && name[1] === 'n') {
 		// Use `isSvg` argument for `isCapture`.
 		isSvg = name.endsWith('Capture');
-
 		// Remove 'Capture' part if `isCapture`.
 		if (isSvg) name = name.slice(0, -7);
 
@@ -93,7 +92,7 @@ export function setProperty(dom, name, value, oldValue, isSvg) {
 		if (!dom._listeners) dom._listeners = {};
 		dom._listeners[name + +isSvg] = value;
 
-		if (!value) {
+		if (!(dom._listeners[name + (/** @type {any} */ (isSvg) | 0)] = value)) {
 			const handler = isSvg ? eventProxyCapture : eventProxy;
 			dom.removeEventListener(name, handler, isSvg);
 		} else if (!oldValue) {
