@@ -91,7 +91,7 @@ export function setProperty(dom, name, value, oldValue, isSvg) {
 
 		if (!dom._listeners) dom._listeners = {};
 
-		if (!(dom._listeners[name + (/** @type {any} */ (isSvg) | 0)] = value)) {
+		if (!(dom._listeners[name + isSvg] = value)) {
 			const handler = isSvg ? eventProxyCapture : eventProxy;
 			dom.removeEventListener(name, handler, isSvg);
 		} else if (!oldValue) {
@@ -147,7 +147,7 @@ export function setProperty(dom, name, value, oldValue, isSvg) {
  * @private
  */
 function eventProxy(e) {
-	this._listeners[e.type + 0](options.event ? options.event(e) : e);
+	this._listeners[e.type + false](options.event ? options.event(e) : e);
 }
 
 /**
@@ -156,5 +156,5 @@ function eventProxy(e) {
  * @private
  */
 function eventProxyCapture(e) {
-	this._listeners[e.type + 1](options.event ? options.event(e) : e);
+	this._listeners[e.type + true](options.event ? options.event(e) : e);
 }
