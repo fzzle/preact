@@ -59,10 +59,8 @@ export function setProperty(dom, name, value, oldValue, isSvg) {
 			dom.style.cssText = value;
 		} else {
 			if (typeof oldValue == 'string') {
-				dom.style.cssText = oldValue = '';
-			}
-
-			if (oldValue) {
+				dom.style.cssText = '';
+			} else if (oldValue) {
 				for (name in oldValue) {
 					if (!(value && name in value)) {
 						setStyle(dom.style, name, '');
