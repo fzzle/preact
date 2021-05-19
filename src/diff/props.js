@@ -62,21 +62,17 @@ export function setProperty(dom, name, value, oldValue, isSvg) {
 		} else {
 			if (typeof oldValue == 'string') {
 				dom.style.cssText = oldValue = '';
-			}
-
-			if (oldValue) {
+			} else {
 				for (name in oldValue) {
-					if (!(value && name in value)) {
+					if (!value || !(name in value)) {
 						setStyle(dom.style, name, '');
 					}
 				}
 			}
 
-			if (value) {
-				for (name in value) {
-					if (!oldValue || value[name] !== oldValue[name]) {
-						setStyle(dom.style, name, value[name]);
-					}
+			for (name in value) {
+				if (!oldValue || value[name] !== oldValue[name]) {
+					setStyle(dom.style, name, value[name]);
 				}
 			}
 		}
