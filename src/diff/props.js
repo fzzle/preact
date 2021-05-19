@@ -65,7 +65,7 @@ export function setProperty(dom, name, value, oldValue, isSvg) {
 			} else {
 				for (name in oldValue) {
 					if (!value || !(name in value)) {
-						setStyle(dom.style, name, '');
+						setStyle(dom.style, name);
 					}
 				}
 			}
