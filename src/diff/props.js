@@ -33,15 +33,22 @@ export function diffProps(dom, newProps, oldProps, isSvg, hydrate) {
 	}
 }
 
-function setStyle(style, key, value) {
-	if (key[0] === '-') {
-		style.setProperty(key, value);
+/**
+ * Set a property on a style object
+ * @param {CSSStyleDeclaration} style The style object
+ * @param {string} name The name of the style property to set
+ * @param {*} [value] The value to set the style property to
+ * @private
+ */
+function setStyle(style, name, value) {
+	if (name[0] === '-') {
+		style.setProperty(name, value);
 	} else if (value == null) {
-		style[key] = '';
-	} else if (typeof value != 'number' || IS_NON_DIMENSIONAL.test(key)) {
-		style[key] = value;
+		style[name] = '';
+	} else if (typeof value != 'number' || IS_NON_DIMENSIONAL.test(name)) {
+		style[name] = value;
 	} else {
-		style[key] = value + 'px';
+		style[name] = value + 'px';
 	}
 }
 
