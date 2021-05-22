@@ -71,7 +71,7 @@ export function diffChildren(
 				Fragment,
 				{ children: childVNode },
 				null,
-				null,
+				null
 			);
 		} else if (childVNode._depth > 0) {
 			// VNode is already in use, clone it. This can happen in the following
@@ -243,9 +243,8 @@ export function diffChildren(
 }
 
 function reorderChildren(childVNode, oldDom, parentDom) {
-	for (let tmp = 0; tmp < childVNode._children.length; tmp++) {
-		let vnode = childVNode._children[tmp];
-		if (vnode) {
+	for (let vnode, i = 0; i < childVNode._children.length; i++) {
+		if ((vnode = childVNode._children[i])) {
 			// We typically enter this code path on sCU bailout, where we copy
 			// oldVNode._children to newVNode._children. If that is the case, we need
 			// to update the old children's _parent pointer to point to the newVNode
