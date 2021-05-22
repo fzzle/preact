@@ -39,14 +39,14 @@ Component.prototype.setState = function(update, callback) {
 		update = update(assign({}, s), this.props);
 	}
 
-	// Skip update if updater function returned null
-	if (update == null) return;
+	// Skip update if updater function returned null.
+	if (update) {
+		assign(s, update);
 
-	assign(s, update);
-
-	if (this._vnode) {
-		if (callback) this._renderCallbacks.push(callback);
-		enqueueRender(this);
+		if (this._vnode) {
+			if (callback) this._renderCallbacks.push(callback);
+			enqueueRender(this);
+		}
 	}
 };
 
