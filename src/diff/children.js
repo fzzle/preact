@@ -218,11 +218,12 @@ export function diffChildren(
 
 	// Remove remaining oldChildren if there are any.
 	for (i = oldChildrenLength; i--; ) {
-		if (oldChildren[i] != null) {
+		childVNode = oldChildren[i];
+		if (childVNode != null) {
 			if (
 				typeof newParentVNode.type == 'function' &&
-				oldChildren[i]._dom != null &&
-				oldChildren[i]._dom == newParentVNode._nextDom
+				childVNode._dom != null &&
+				childVNode._dom == newParentVNode._nextDom
 			) {
 				// If the newParentVNode.__nextDom points to a dom node that is about to
 				// be unmounted, then get the next sibling of that vnode and set
@@ -230,7 +231,7 @@ export function diffChildren(
 				newParentVNode._nextDom = getDomSibling(oldParentVNode, i + 1);
 			}
 
-			unmount(oldChildren[i], oldChildren[i]);
+			unmount(childVNode, childVNode);
 		}
 	}
 
