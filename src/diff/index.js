@@ -147,7 +147,7 @@ export function diff(
 					c._vnode = newVNode;
 					newVNode._dom = oldVNode._dom;
 					newVNode._children = oldVNode._children;
-					newVNode._children.forEach(vnode => {
+					newVNode._children.some(vnode => {
 						if (vnode) vnode._parent = newVNode;
 					});
 					if (c._renderCallbacks.length) {
@@ -303,18 +303,16 @@ function diffElementNodes(
 	commitQueue,
 	isHydrating
 ) {
-	let oldProps = oldVNode.props;
-	let newProps = newVNode.props;
-	let nodeType = newVNode.type;
-	let i = 0;
+	let oldProps = oldVNode.props,
+		newProps = newVNode.props,
+		nodeType = newVNode.type,
+		i;
 
 	// Tracks entering and exiting SVG namespace when descending through the tree.
 	if (nodeType === 'svg') isSvg = true;
 
 	if (excessDomChildren != null) {
-		for (; i < excessDomChildren.length; i++) {
-			const child = excessDomChildren[i];
-
+		excessDomChildren.some((child, i) => {
 			// if newVNode matches an element in excessDomChildren or the `dom`
 			// argument matches an element in excessDomChildren, remove it from
 			// excessDomChildren so it isn't later removed in diffChildren
@@ -325,9 +323,9 @@ function diffElementNodes(
 			) {
 				dom = child;
 				excessDomChildren[i] = null;
-				break;
+				return true;
 			}
-		}
+		});
 	}
 
 	if (dom == null) {
@@ -492,11 +490,11 @@ export function unmount(vnode, parentVNode, skipRemove) {
 	}
 
 	if ((r = vnode._children)) {
-		for (let i = 0; i < r.length; i++) {
-			if (r[i]) {
-				unmount(r[i], parentVNode, typeof vnode.type != 'function');
+		r.some((child) => {
+			if (child) {
+				unmount(child, parentVNode, typeof vnode.type != 'function');
 			}
-		}
+		});
 	}
 
 	if (!skipRemove && vnode._dom != null) removeNode(vnode._dom);

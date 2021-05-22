@@ -152,13 +152,12 @@ function renderComponent(component) {
 function updateParentDomPointers(vnode) {
 	if ((vnode = vnode._parent) != null && vnode._component != null) {
 		vnode._dom = vnode._component.base = null;
-		for (let i = 0; i < vnode._children.length; i++) {
-			let child = vnode._children[i];
+		vnode._children.some(child => {
 			if (child != null && child._dom != null) {
 				vnode._dom = vnode._component.base = child._dom;
-				break;
+				return true;
 			}
-		}
+		});
 
 		return updateParentDomPointers(vnode);
 	}
