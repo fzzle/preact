@@ -1,5 +1,6 @@
 import { slice } from './util';
 import options from './options';
+import { EMPTY_OBJ } from './constants';
 
 let vnodeId = 0;
 
@@ -12,15 +13,7 @@ let vnodeId = 0;
  * @returns {import('./internal').VNode}
  */
 export function createElement(type, props, children) {
-	let normalizedProps = {},
-		key,
-		ref,
-		i;
-	for (i in props) {
-		if (i == 'key') key = props[i];
-		else if (i == 'ref') ref = props[i];
-		else normalizedProps[i] = props[i];
-	}
+	let {key, ref, ...normalizedProps} = props || EMPTY_OBJ;
 
 	if (arguments.length > 2) {
 		normalizedProps.children =
@@ -29,8 +22,8 @@ export function createElement(type, props, children) {
 
 	// If a Component VNode, check for and apply defaultProps
 	// Note: type may be undefined in development, must never error here.
-		for (i in type.defaultProps) {
 	if (typeof type == 'function' && type.defaultProps) {
+		for (let i in type.defaultProps) {
 			if (normalizedProps[i] === undefined) {
 				normalizedProps[i] = type.defaultProps[i];
 			}

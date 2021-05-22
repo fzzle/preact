@@ -9,15 +9,11 @@ import { createVNode } from './create-element';
  * @returns {import('./internal').VNode}
  */
 export function cloneElement(vnode, props, children) {
-	let normalizedProps = assign({}, vnode.props),
-		key,
-		ref,
-		i;
-	for (i in props) {
-		if (i == 'key') key = props[i];
-		else if (i == 'ref') ref = props[i];
-		else normalizedProps[i] = props[i];
-	}
+	let { key = vnode.key, ref = vnode.ref, ...normalizedProps } = assign(
+		{},
+		vnode.props,
+		props
+	);
 
 	if (arguments.length > 2) {
 		normalizedProps.children =
