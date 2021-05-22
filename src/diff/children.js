@@ -237,8 +237,8 @@ export function diffChildren(
 
 	// Set refs only after unmount
 	if (refs) {
-		for (i = 0; i < refs.length; i++) {
-			applyRef(refs[i], refs[++i], refs[++i]);
+		for (i = 0; i < refs.length; ) {
+			applyRef(refs[i++], refs[i++], refs[i++]);
 		}
 	}
 }
