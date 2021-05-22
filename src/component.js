@@ -39,12 +39,10 @@ Component.prototype.setState = function(update, callback) {
 		update = update(assign({}, s), this.props);
 	}
 
-	if (update) {
-		assign(s, update);
-	}
-
 	// Skip update if updater function returned null
 	if (update == null) return;
+
+	assign(s, update);
 
 	if (this._vnode) {
 		if (callback) this._renderCallbacks.push(callback);
