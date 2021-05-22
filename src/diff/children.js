@@ -277,8 +277,7 @@ function reorderChildren(childVNode, oldDom, parentDom) {
  * children of a virtual node
  * @returns {import('../internal').VNode[]}
  */
-export function toChildArray(children, out) {
-	out = out || [];
+export function toChildArray(children, out = []) {
 	if (children == null || typeof children == 'boolean') {
 	} else if (Array.isArray(children)) {
 		children.some(child => {
