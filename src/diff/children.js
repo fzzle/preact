@@ -72,7 +72,6 @@ export function diffChildren(
 				{ children: childVNode },
 				null,
 				null,
-				null
 			);
 		} else if (childVNode._depth > 0) {
 			// VNode is already in use, clone it. This can happen in the following
