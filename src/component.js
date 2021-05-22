@@ -116,12 +116,12 @@ export function getDomSibling(vnode, childIndex) {
  * @param {import('./internal').Component} component The component to rerender
  */
 function renderComponent(component) {
-	let vnode = component._vnode,
-		oldDom = vnode._dom,
-		parentDom = component._parentDom;
+	let parentDom = component._parentDom;
 
 	if (parentDom) {
-		let commitQueue = [];
+		let vnode = component._vnode,
+			oldDom = vnode._dom,
+			commitQueue = [];
 		const oldVNode = assign({}, vnode);
 		oldVNode._original = vnode._original + 1;
 
