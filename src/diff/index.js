@@ -508,6 +508,6 @@ export function unmount(vnode, parentVNode, skipRemove) {
 }
 
 /** The `.render()` method for a PFC backing instance. */
-function doRender(props, state, context) {
+function doRender(props, _state, context) {
 	return this.constructor(props, context);
 }
