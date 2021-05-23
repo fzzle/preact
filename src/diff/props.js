@@ -88,8 +88,7 @@ export function setProperty(dom, name, value, oldValue, isSvg) {
 		isSvg = name !== (name = name.replace(/Capture$/, ''));
 
 		// Infer correct casing for DOM built-in events:
-		if (name.toLowerCase() in dom) name = name.toLowerCase().slice(2);
-		else name = name.slice(2);
+		name = (name.toLowerCase() in dom ? name.toLowerCase() : name).slice(2);
 
 		if (!dom._listeners) dom._listeners = {};
 		dom._listeners[name + isSvg] = value;
