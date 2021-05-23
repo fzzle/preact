@@ -95,14 +95,12 @@ export function setProperty(dom, name, value, oldValue, isSvg) {
 		if (!dom._listeners) dom._listeners = {};
 		dom._listeners[name + useCapture] = value;
 
-		if (value) {
-			if (!oldValue) {
-				const handler = useCapture ? eventProxyCapture : eventProxy;
-				dom.addEventListener(name, handler, useCapture);
-			}
-		} else {
+		if (!value) {
 			const handler = useCapture ? eventProxyCapture : eventProxy;
 			dom.removeEventListener(name, handler, useCapture);
+		} else if (!oldValue) {
+			const handler = useCapture ? eventProxyCapture : eventProxy;
+			dom.addEventListener(name, handler, useCapture);
 		}
 	} else if (name !== 'dangerouslySetInnerHTML') {
 		if (isSvg) {
