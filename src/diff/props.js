@@ -85,7 +85,9 @@ export function setProperty(dom, name, value, oldValue, isSvg) {
 	// Benchmark for comparison: https://esbench.com/bench/574c954bdb965b9a00965ac6
 	else if (name[0] === 'o' && name[1] === 'n') {
 		// `isSvg` is used for `useCapture` here.
-		isSvg = name !== (name = name.replace(/Capture$/, ''));
+		if ((isSvg = name.endsWith('Capture'))) {
+			name = name.slice(0, -7);
+		}
 
 		// Infer correct casing for DOM built-in events:
 		name = (name.toLowerCase() in dom ? name.toLowerCase() : name).slice(2);
