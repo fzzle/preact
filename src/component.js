@@ -119,11 +119,12 @@ function renderComponent(component) {
 	let parentDom = component._parentDom;
 
 	if (parentDom) {
-		let vnode = component._vnode,
+		let commitQueue = [],
+			vnode = component._vnode,
 			oldDom = vnode._dom,
-			commitQueue = [];
-		const oldVNode = assign({}, vnode);
-		oldVNode._original = vnode._original + 1;
+			oldVNode = assign({}, vnode);
+
+		oldVNode._original++;
 
 		diff(
 			parentDom,
