@@ -434,10 +434,7 @@ function diffElementNodes(
 			) {
 				setProperty(dom, 'value', i, oldProps.value, false);
 			}
-			if (
-				(i = newProps.checked) !== undefined &&
-				i !== dom.checked
-			) {
+			if ((i = newProps.checked) !== undefined && i !== dom.checked) {
 				setProperty(dom, 'checked', i, oldProps.checked, false);
 			}
 		}
