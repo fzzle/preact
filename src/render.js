@@ -1,6 +1,6 @@
 import { EMPTY_OBJ } from './constants';
 import { commitRoot, diff } from './diff/index';
-import { createElement, Fragment } from './create-element';
+import { createVNode, Fragment } from './create-element';
 import options from './options';
 import { slice } from './util';
 
@@ -29,10 +29,12 @@ export function render(vnode, parentDom, replaceNode) {
 		? null
 		: (replaceNode && replaceNode._children) || parentDom._children;
 
-	vnode = (
-		(!isHydrating && replaceNode) ||
-		parentDom
-	)._children = createElement(Fragment, null, [vnode]);
+	vnode = ((!isHydrating && replaceNode) || parentDom)._children = createVNode(
+		Fragment,
+		{ children: [vnode] },
+		null,
+		null
+	);
 
 	// List of effects that need to be called after diffing.
 	let commitQueue = [];
