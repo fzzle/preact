@@ -18,8 +18,8 @@ export function createContext(defaultValue, contextId) {
 		/** @type {import('./internal').FunctionComponent} */
 		Provider(props) {
 			if (!this.getChildContext) {
-				let subs = [];
-				let ctx = {};
+				let subs = [],
+					ctx = {};
 				ctx[contextId] = this;
 
 				this.getChildContext = () => ctx;
