@@ -105,9 +105,7 @@ export function setProperty(dom, name, value, oldValue, isSvg) {
 	} else if (name !== 'dangerouslySetInnerHTML') {
 		if (isSvg) {
 			// Normalize incorrect prop usage for SVG:
-			// - xlink:href / xlinkHref --> href (xlink:href was removed from SVG and isn't needed)
-			// - className --> class
-			name = name.replace(/xlink[H:h]/, 'h').replace(/sName$/, 's');
+			if (name === 'className') name = 'class';
 		} else if (
 			name !== 'href' &&
 			name !== 'list' &&
