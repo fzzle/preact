@@ -425,7 +425,6 @@ function diffElementNodes(
 		// (as above, don't diff props during hydration)
 		if (!isHydrating) {
 			if (
-				'value' in newProps &&
 				(i = newProps.value) !== undefined &&
 				// #2756 For the <progress>-element the initial value is 0,
 				// despite the attribute not being present. When the attribute
@@ -436,7 +435,6 @@ function diffElementNodes(
 				setProperty(dom, 'value', i, oldProps.value, false);
 			}
 			if (
-				'checked' in newProps &&
 				(i = newProps.checked) !== undefined &&
 				i !== dom.checked
 			) {
