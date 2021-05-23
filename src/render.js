@@ -15,19 +15,20 @@ import { slice } from './util';
 export function render(vnode, parentDom, replaceNode) {
 	if (options._root) options._root(vnode, parentDom);
 
-	// We abuse the `replaceNode` parameter in `hydrate()` to signal if we are in
-	// hydration mode or not by passing the `hydrate` function instead of a DOM
-	// element..
-	let isHydrating = typeof replaceNode === 'function';
-
-	// To be able to support calling `render()` multiple times on the same
-	// DOM node, we need to obtain a reference to the previous tree. We do
-	// this by assigning a new `_children` property to DOM nodes which points
-	// to the last rendered tree. By default this property is not present, which
-	// means that we are mounting a new tree for the first time.
-	let oldVNode = isHydrating
-		? null
-		: (replaceNode && replaceNode._children) || parentDom._children;
+	// List of effects that need to be called after diffing.
+	let commitQueue = [],
+		// We abuse the `replaceNode` parameter in `hydrate()` to signal if we
+		// are in hydration mode or not by passing the `hydrate` function
+		// instead of a DOM element..
+		isHydrating = typeof replaceNode == 'function',
+		// To be able to support calling `render()` multiple times on the same
+		// DOM node, we need to obtain a reference to the previous tree. We do
+		// this by assigning a new `_children` property to DOM nodes which points
+		// to the last rendered tree. By default this property is not present,
+		// which means that we are mounting a new tree for the first time.
+		oldVNode = isHydrating
+			? null
+			: (replaceNode && replaceNode._children) || parentDom._children;
 
 	vnode = ((!isHydrating && replaceNode) || parentDom)._children = createVNode(
 		Fragment,
@@ -36,8 +37,6 @@ export function render(vnode, parentDom, replaceNode) {
 		null
 	);
 
-	// List of effects that need to be called after diffing.
-	let commitQueue = [];
 	diff(
 		parentDom,
 		// Determine the new vnode tree and store it on the DOM element on
