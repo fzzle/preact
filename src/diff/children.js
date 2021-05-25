@@ -244,8 +244,12 @@ export function diffChildren(
 }
 
 function reorderChildren(childVNode, oldDom, parentDom) {
-	for (let vnode, i = 0; i < childVNode._children.length; i++) {
-		if ((vnode = childVNode._children[i])) {
+	for (
+		let vnode, children = childVNode._children, i = 0;
+		i < children.length;
+		i++
+	) {
+		if ((vnode = children[i])) {
 			// We typically enter this code path on sCU bailout, where we copy
 			// oldVNode._children to newVNode._children. If that is the case, we need
 			// to update the old children's _parent pointer to point to the newVNode
@@ -259,7 +263,7 @@ function reorderChildren(childVNode, oldDom, parentDom) {
 					parentDom,
 					vnode,
 					vnode,
-					childVNode._children,
+					children,
 					vnode._dom,
 					oldDom
 				);
