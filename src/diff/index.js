@@ -363,7 +363,7 @@ function diffElementNodes(
 		}
 
 		// If excessDomChildren was not null, repopulate it with the current element's children:
-		if (excessDomChildren) (excessDomChildren = slice.call(dom.childNodes));
+		if (excessDomChildren) excessDomChildren = slice.call(dom.childNodes);
 
 		if (!oldProps) oldProps = EMPTY_OBJ;
 
@@ -378,7 +378,8 @@ function diffElementNodes(
 			if (excessDomChildren != null) {
 				oldProps = {};
 				for (i = 0; i < dom.attributes.length; i++) {
-					oldProps[dom.attributes[i].name] = dom.attributes[i].value;
+					let attr = dom.attributes[i];
+					oldProps[attr.name] = attr.value;
 				}
 			}
 
