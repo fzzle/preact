@@ -2,7 +2,7 @@ import { EMPTY_OBJ } from '../constants';
 import { Component } from '../component';
 import { Fragment } from '../create-element';
 import { diffChildren } from './children';
-import { diffProps, setProperty } from './props';
+import { setProperty } from './props';
 import { assign, removeNode, slice } from '../util';
 import options from '../options';
 
@@ -306,6 +306,7 @@ function diffElementNodes(
 	let oldProps = oldVNode.props;
 	let newProps = newVNode.props;
 	let nodeType = newVNode.type;
+	/** @type {any} */
 	let i = 0;
 
 	// Tracks entering and exiting SVG namespace when descending through the tree.
@@ -394,7 +395,26 @@ function diffElementNodes(
 			}
 		}
 
-		diffProps(dom, newProps, oldProps, isSvg, isHydrating);
+		for (i in oldProps) {
+			if (i !== 'children' && i !== 'key' && !(i in newProps)) {
+				setProperty(dom, i, null, oldProps[i], isSvg);
+			}
+		}
+
+		for (i in newProps) {
+			if (
+				(!isHydrating || typeof newProps[i] == 'function') &&
+				i !== 'children' &&
+				i !== 'key' &&
+				i !== 'value' &&
+				i !== 'checked' &&
+				oldProps[i] !== newProps[i]
+			) {
+				setProperty(dom, i, newProps[i], oldProps[i], isSvg);
+			}
+		}
+
+		// diffProps(dom, newProps, oldProps, isSvg, isHydrating);
 
 		// If the new vnode didn't have dangerouslySetInnerHTML, diff its children
 		if (newHtml) {
