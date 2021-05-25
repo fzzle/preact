@@ -303,10 +303,10 @@ function diffElementNodes(
 	commitQueue,
 	isHydrating
 ) {
-	let oldProps = oldVNode.props;
-	let newProps = newVNode.props;
-	let nodeType = newVNode.type;
-	let i;
+	let oldProps = oldVNode.props,
+		newProps = newVNode.props,
+		nodeType = newVNode.type,
+		i;
 
 	if (excessDomChildren != null) {
 		for (i = 0; i < excessDomChildren.length; i++) {
@@ -338,7 +338,6 @@ function diffElementNodes(
 			dom.data = newProps;
 		}
 	} else {
-
 		// Tracks entering and exiting SVG namespace when descending through the tree.
 		if (nodeType === 'svg') isSvg = true;
 
@@ -364,9 +363,9 @@ function diffElementNodes(
 		}
 
 		// If excessDomChildren was not null, repopulate it with the current element's children:
-		excessDomChildren = excessDomChildren && slice.call(dom.childNodes);
+		if (excessDomChildren) (excessDomChildren = slice.call(dom.childNodes));
 
-		oldProps = oldVNode.props || EMPTY_OBJ;
+		if (!oldProps) oldProps = EMPTY_OBJ;
 
 		let oldHtml = oldProps.dangerouslySetInnerHTML;
 		let newHtml = newProps.dangerouslySetInnerHTML;
