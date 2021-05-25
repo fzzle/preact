@@ -306,14 +306,10 @@ function diffElementNodes(
 	let oldProps = oldVNode.props;
 	let newProps = newVNode.props;
 	let nodeType = newVNode.type;
-	/** @type {any} */
-	let i = 0;
-
-	// Tracks entering and exiting SVG namespace when descending through the tree.
-	if (nodeType === 'svg') isSvg = true;
+	let i;
 
 	if (excessDomChildren != null) {
-		for (; i < excessDomChildren.length; i++) {
+		for (i = 0; i < excessDomChildren.length; i++) {
 			const child = excessDomChildren[i];
 
 			// if newVNode matches an element in excessDomChildren or the `dom`
@@ -331,38 +327,42 @@ function diffElementNodes(
 		}
 	}
 
-	if (dom == null) {
-		if (nodeType === null) {
+	if (nodeType === null) {
+		if (dom == null) {
 			// @ts-ignore createTextNode returns Text, we expect PreactElement
 			return document.createTextNode(newProps);
 		}
 
-		if (isSvg) {
-			dom = document.createElementNS(
-				'http://www.w3.org/2000/svg',
-				// @ts-ignore We know `newVNode.type` is a string
-				nodeType
-			);
-		} else {
-			dom = document.createElement(
-				// @ts-ignore We know `newVNode.type` is a string
-				nodeType,
-				newProps.is && newProps
-			);
-		}
-
-		// we created a new parent, so none of the previously attached children can be reused:
-		excessDomChildren = null;
-		// we are creating a new node, so we can assume this is a new subtree (in case we are hydrating), this deopts the hydrate
-		isHydrating = false;
-	}
-
-	if (nodeType === null) {
 		// During hydration, we still have to split merged text from SSR'd HTML.
 		if (oldProps !== newProps && (!isHydrating || dom.data !== newProps)) {
 			dom.data = newProps;
 		}
 	} else {
+
+		// Tracks entering and exiting SVG namespace when descending through the tree.
+		if (nodeType === 'svg') isSvg = true;
+
+		if (dom == null) {
+			if (isSvg) {
+				dom = document.createElementNS(
+					'http://www.w3.org/2000/svg',
+					// @ts-ignore We know `newVNode.type` is a string
+					nodeType
+				);
+			} else {
+				dom = document.createElement(
+					// @ts-ignore We know `newVNode.type` is a string
+					nodeType,
+					newProps.is && newProps
+				);
+			}
+
+			// we created a new parent, so none of the previously attached children can be reused:
+			excessDomChildren = null;
+			// we are creating a new node, so we can assume this is a new subtree (in case we are hydrating), this deopts the hydrate
+			isHydrating = false;
+		}
+
 		// If excessDomChildren was not null, repopulate it with the current element's children:
 		excessDomChildren = excessDomChildren && slice.call(dom.childNodes);
 
