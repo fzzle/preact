@@ -58,7 +58,7 @@ function setStyle(style, name, value) {
  * @param {string} name The name of the property to set
  * @param {*} value The value to set the property to
  * @param {*} oldValue The old value the property had
- * @param {boolean} isSvg Whether or not this DOM node is an SVG node or not
+ * @param {boolean} [isSvg] Whether or not this DOM node is an SVG node or not
  */
 export function setProperty(dom, name, value, oldValue, isSvg) {
 	o: if (name === 'style') {

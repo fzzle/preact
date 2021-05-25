@@ -432,10 +432,10 @@ function diffElementNodes(
 				// To fix that we'll always update it when it is 0 for progress elements
 				(i !== dom.value || (nodeType === 'progress' && !i))
 			) {
-				setProperty(dom, 'value', i, oldProps.value, false);
+				setProperty(dom, 'value', i, oldProps.value);
 			}
 			if ((i = newProps.checked) !== undefined && i !== dom.checked) {
-				setProperty(dom, 'checked', i, oldProps.checked, false);
+				setProperty(dom, 'checked', i, oldProps.checked);
 			}
 		}
 	}
