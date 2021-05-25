@@ -414,8 +414,6 @@ function diffElementNodes(
 			}
 		}
 
-		// diffProps(dom, newProps, oldProps, isSvg, isHydrating);
-
 		// If the new vnode didn't have dangerouslySetInnerHTML, diff its children
 		if (newHtml) {
 			newVNode._children = [];
