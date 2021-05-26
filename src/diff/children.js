@@ -40,8 +40,7 @@ export function diffChildren(
 	// This is a compression of oldParentVNode!=null && oldParentVNode != EMPTY_OBJ && oldParentVNode._children || EMPTY_ARR
 	// as EMPTY_OBJ._children should be `undefined`.
 	let oldChildren = (oldParentVNode && oldParentVNode._children) || EMPTY_ARR;
-
-	let oldChildrenLength = oldChildren.length;
+	let k = oldChildren.length;
 
 	newParentVNode._children = [];
 	for (i = 0; i < renderResult.length; i++) {
@@ -114,7 +113,7 @@ export function diffChildren(
 		} else {
 			// Either oldVNode === undefined or oldChildrenLength > 0,
 			// so after this loop oldVNode == null or oldVNode is a valid value.
-			for (j = 0; j < oldChildrenLength; j++) {
+			for (j = 0; j < k; j++) {
 				oldVNode = oldChildren[j];
 				// If childVNode is unkeyed, we only match similarly unkeyed nodes, otherwise we match by key.
 				// We always match by type (in either case).
@@ -217,8 +216,8 @@ export function diffChildren(
 	newParentVNode._dom = firstChildDom;
 
 	// Remove remaining oldChildren if there are any.
-	for (i = oldChildrenLength; i--; ) {
-		childVNode = oldChildren[i];
+	while (k--) {
+		childVNode = oldChildren[k];
 		if (childVNode != null) {
 			if (
 				typeof newParentVNode.type == 'function' &&
@@ -228,7 +227,7 @@ export function diffChildren(
 				// If the newParentVNode.__nextDom points to a dom node that is about to
 				// be unmounted, then get the next sibling of that vnode and set
 				// _nextDom to it
-				newParentVNode._nextDom = getDomSibling(oldParentVNode, i + 1);
+				newParentVNode._nextDom = getDomSibling(oldParentVNode, k + 1);
 			}
 
 			unmount(childVNode, childVNode);
