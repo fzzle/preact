@@ -323,9 +323,9 @@ function placeChild(
 		} else {
 			// `j<oldChildrenLength; j+=2` is an alternative to `j++<oldChildrenLength/2`
 			for (
-				let sibDom = oldDom, j = 0;
-				(sibDom = sibDom.nextSibling) && j < oldChildren.length;
-				j += 2
+				let sibDom = oldDom, i = 0;
+				(sibDom = sibDom.nextSibling) && i < oldChildren.length;
+				i += 2
 			) {
 				if (sibDom == newDom) {
 					break outer;
