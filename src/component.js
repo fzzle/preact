@@ -141,11 +141,14 @@ function renderComponent(component) {
 		commitRoot(commitQueue, vnode);
 
 		if (vnode._dom != oldDom) {
-			while ((vnode = vnode._parent) != null && vnode._component != null) {
+			while ((vnode = vnode._parent) && vnode._component != null) {
 				vnode._dom = vnode._component.base = null;
-				for (let child, i = 0; i < vnode._children.length; i++) {
-					if ((child = vnode._children[i]) != null && child._dom != null) {
-						vnode._dom = vnode._component.base = child._dom;
+				// Use `commitQueue` for `children`.
+				commitQueue = vnode._children;
+				for (let i = 0; i < commitQueue.length; i++) {
+					// Use `oldVNode` for `child`.
+					if ((oldVNode = commitQueue[i]) && oldVNode._dom != null) {
+						vnode._dom = vnode._component.base = oldVNode._dom;
 						break;
 					}
 				}
