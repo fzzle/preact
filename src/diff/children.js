@@ -177,7 +177,7 @@ export function diffChildren(
 							children = (child = vnode)._children;
 							j = -1;
 						} else {
-							oldDom = placeChild(
+							childVNode._nextDom = oldDom = placeChild(
 								parentDom,
 								vnode,
 								vnode,
@@ -188,8 +188,6 @@ export function diffChildren(
 						}
 					}
 				}
-
-				childVNode._nextDom = oldDom;
 			} else {
 				oldDom = placeChild(
 					parentDom,
