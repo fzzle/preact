@@ -86,7 +86,9 @@ Component.prototype.render = Fragment;
 export function getDomSibling(vnode, childIndex) {
 	if (childIndex == null) {
 		// Use childIndex==null as a signal to resume the search from the vnode's sibling
-		if (!vnode._parent) return null;
+		if (!vnode._parent) {
+			return null;
+		}
 
 		childIndex = vnode._parent._children.indexOf(vnode) + 1;
 		vnode = vnode._parent;
@@ -142,11 +144,12 @@ function renderComponent(component) {
 		commitRoot(commitQueue, vnode);
 
 		if (vnode._dom != oldDom) {
+			let i;
 			while ((vnode = vnode._parent) && vnode._component != null) {
 				vnode._dom = vnode._component.base = null;
 				// Use `commitQueue` for `children`.
 				commitQueue = vnode._children;
-				for (let i = 0; i < commitQueue.length; i++) {
+				for (i = 0; i < commitQueue.length; i++) {
 					// Use `oldVNode` for `child`.
 					if ((oldVNode = commitQueue[i]) && oldVNode._dom != null) {
 						vnode._dom = vnode._component.base = oldVNode._dom;
