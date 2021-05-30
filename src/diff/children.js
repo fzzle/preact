@@ -256,7 +256,8 @@ function reorderChildren(childVNode, oldDom, parentDom) {
 			vnode._parent = childVNode;
 
 			if (typeof vnode.type == 'function') {
-				oldDom = reorderChildren(vnode, oldDom, parentDom);
+				children = (childVNode = vnode)._children;
+				i = -1;
 			} else {
 				oldDom = placeChild(
 					parentDom,
