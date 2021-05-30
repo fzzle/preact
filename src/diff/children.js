@@ -162,11 +162,13 @@ export function diffChildren(
 				childVNode._children != null && // Can be null if childVNode suspended
 				childVNode._children === oldVNode._children
 			) {
-				let vnode,
-					children = childVNode._children,
-					child = childVNode;
-				for (j = 0; j < children.length; j++) {
-					if ((vnode = children[j])) {
+				let child = childVNode;
+				for (
+					let vnode, children = child._children, i = 0;
+					i < children.length;
+					i++
+				) {
+					if ((vnode = children[i])) {
 						// We typically enter this code path on sCU bailout, where we copy
 						// oldVNode._children to newVNode._children. If that is the case, we need
 						// to update the old children's _parent pointer to point to the newVNode
@@ -175,7 +177,7 @@ export function diffChildren(
 
 						if (typeof vnode.type == 'function') {
 							children = (child = vnode)._children;
-							j = -1;
+							i = -1;
 						} else {
 							childVNode._nextDom = oldDom = placeChild(
 								parentDom,
