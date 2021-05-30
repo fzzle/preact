@@ -196,9 +196,7 @@ let prevDebounce;
 export function enqueueRender(c) {
 	if (
 		(!c._dirty &&
-			(c._dirty = true) &&
-			rerenderQueue.push(c) &&
-			!process._rerenderCount++) ||
+			((c._dirty = true), rerenderQueue.push(c), !process._rerenderCount++)) ||
 		prevDebounce !== options.debounceRendering
 	) {
 		prevDebounce = options.debounceRendering;
