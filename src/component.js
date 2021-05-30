@@ -86,9 +86,10 @@ Component.prototype.render = Fragment;
 export function getDomSibling(vnode, childIndex) {
 	if (childIndex == null) {
 		// Use childIndex==null as a signal to resume the search from the vnode's sibling
-		return vnode._parent
-			? getDomSibling(vnode._parent, vnode._parent._children.indexOf(vnode) + 1)
-			: null;
+		if (!vnode._parent) return null;
+
+		childIndex = vnode._parent._children.indexOf(vnode) + 1;
+		vnode = vnode._parent;
 	}
 
 	let sibling;
