@@ -178,6 +178,7 @@ const defer =
 		? Promise.prototype.then.bind(Promise.resolve())
 		: setTimeout;
 
+const compareFn = (a, b) => a._vnode._depth - b._vnode._depth;
 /*
  * The value of `Component.debounce` must asynchronously invoke the passed in callback. It is
  * important that contributors to Preact can consistently reason about what calls to `setState`, etc.
@@ -203,7 +204,6 @@ export function enqueueRender(c) {
 	}
 }
 
-const compareFn = (a, b) => a._vnode._depth - b._vnode._depth
 
 /** Flush the render queue by rerendering all queued components */
 function process() {
