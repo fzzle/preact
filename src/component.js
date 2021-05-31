@@ -199,8 +199,7 @@ export function enqueueRender(c) {
 			((c._dirty = true), rerenderQueue.push(c), !process._rerenderCount++)) ||
 		prevDebounce !== options.debounceRendering
 	) {
-		prevDebounce = options.debounceRendering;
-		(prevDebounce || defer)(process);
+		((prevDebounce = options.debounceRendering) || defer)(process);
 	}
 }
 
