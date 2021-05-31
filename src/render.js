@@ -20,7 +20,7 @@ export function render(vnode, parentDom, replaceNode) {
 		// We abuse the `replaceNode` parameter in `hydrate()` to signal if we
 		// are in hydration mode or not by passing the `hydrate` function
 		// instead of a DOM element..
-		isHydrating = typeof replaceNode == 'function',
+		isHydrating = replaceNode === false,
 		// To be able to support calling `render()` multiple times on the same
 		// DOM node, we need to obtain a reference to the previous tree. We do
 		// this by assigning a new `_children` property to DOM nodes which points
@@ -30,7 +30,7 @@ export function render(vnode, parentDom, replaceNode) {
 			? null
 			: (replaceNode && replaceNode._children) || parentDom._children;
 
-	vnode = ((!isHydrating && replaceNode) || parentDom)._children = createVNode(
+	vnode = (replaceNode || parentDom)._children = createVNode(
 		Fragment,
 		{ children: [vnode] },
 		null,
@@ -45,7 +45,7 @@ export function render(vnode, parentDom, replaceNode) {
 		oldVNode || EMPTY_OBJ,
 		EMPTY_OBJ,
 		'ownerSVGElement' in parentDom,
-		!isHydrating && replaceNode
+		replaceNode
 			? [replaceNode]
 			: oldVNode
 			? null
@@ -53,11 +53,7 @@ export function render(vnode, parentDom, replaceNode) {
 			? slice.call(parentDom.childNodes)
 			: null,
 		commitQueue,
-		!isHydrating && replaceNode
-			? replaceNode
-			: oldVNode
-			? oldVNode._dom
-			: parentDom.firstChild,
+		replaceNode || (oldVNode ? oldVNode._dom : parentDom.firstChild),
 		isHydrating
 	);
 
@@ -72,5 +68,5 @@ export function render(vnode, parentDom, replaceNode) {
  * update
  */
 export function hydrate(vnode, parentDom) {
-	render(vnode, parentDom, hydrate);
+	render(vnode, parentDom, false);
 }
