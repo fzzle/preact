@@ -204,11 +204,13 @@ export function enqueueRender(c) {
 	}
 }
 
+const compareFn = (a, b) => a._vnode._depth - b._vnode._depth
+
 /** Flush the render queue by rerendering all queued components */
 function process() {
 	let queue;
 	while ((process._rerenderCount = rerenderQueue.length)) {
-		queue = rerenderQueue.sort((a, b) => a._vnode._depth - b._vnode._depth);
+		queue = rerenderQueue.sort(compareFn);
 		rerenderQueue = [];
 		// Don't update `renderCount` yet. Keep its value non-zero to prevent unnecessary
 		// process() calls from getting scheduled while `queue` is still being consumed.
