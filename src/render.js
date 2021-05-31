@@ -47,11 +47,9 @@ export function render(vnode, parentDom, replaceNode) {
 		'ownerSVGElement' in parentDom,
 		replaceNode
 			? [replaceNode]
-			: oldVNode
+			: (oldVNode || !parentDom.firstChild)
 			? null
-			: parentDom.firstChild
-			? slice.call(parentDom.childNodes)
-			: null,
+			: slice.call(parentDom.childNodes),
 		commitQueue,
 		replaceNode || (oldVNode ? oldVNode._dom : parentDom.firstChild),
 		isHydrating
