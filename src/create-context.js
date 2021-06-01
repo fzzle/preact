@@ -47,10 +47,13 @@ export function createContext(defaultValue, contextId) {
 				this.sub = c => {
 					subs.push(c);
 					let old = c.componentWillUnmount;
-					c.componentWillUnmount = () => {
-						subs.splice(subs.indexOf(c), 1);
-						if (old) old.call(c);
-					};
+					if (!old || !old._removesSubs) {
+						(c.componentWillUnmount = () => {
+							subs = [];
+							if (old) old.call(c);
+							// @ts-ignore
+						})._removesSubs = true;
+					}
 				};
 			}
 
