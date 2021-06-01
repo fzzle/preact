@@ -59,9 +59,9 @@ export function diff(
 			// Necessary for createContext api. Setting this property will pass
 			// the context value as `this.context` just for this component.
 			tmp = newType.contextType;
-			let provider = tmp && globalContext[tmp._id];
+			let provider;
 			let componentContext = tmp
-				? provider
+				? (provider = globalContext[tmp._id])
 					? provider.props.value
 					: tmp._defaultValue
 				: globalContext;
