@@ -87,7 +87,7 @@ export function diff(
 				if (!c.state) c.state = {};
 				c.context = componentContext;
 				c._globalContext = globalContext;
-				isNew = c._dirty = true;
+				c._dirty = isNew = true;
 				c._renderCallbacks = [];
 			}
 
@@ -95,7 +95,7 @@ export function diff(
 			if (c._nextState == null) {
 				c._nextState = c.state;
 			}
-			if (newType.getDerivedStateFromProps != null) {
+			if (newType.getDerivedStateFromProps) {
 				if (c._nextState == c.state) {
 					c._nextState = assign({}, c._nextState);
 				}
@@ -111,28 +111,25 @@ export function diff(
 
 			// Invoke pre-render lifecycle methods
 			if (isNew) {
-				if (
-					newType.getDerivedStateFromProps == null &&
-					c.componentWillMount != null
-				) {
+				if (!newType.getDerivedStateFromProps && c.componentWillMount) {
 					c.componentWillMount();
 				}
 
-				if (c.componentDidMount != null) {
+				if (c.componentDidMount) {
 					c._renderCallbacks.push(c.componentDidMount);
 				}
 			} else {
 				if (
-					newType.getDerivedStateFromProps == null &&
-					newProps !== oldProps &&
-					c.componentWillReceiveProps != null
+					!newType.getDerivedStateFromProps &&
+					c.componentWillReceiveProps &&
+					newProps !== oldProps
 				) {
 					c.componentWillReceiveProps(newProps, componentContext);
 				}
 
 				if (
 					(!c._force &&
-						c.shouldComponentUpdate != null &&
+						c.shouldComponentUpdate &&
 						c.shouldComponentUpdate(
 							newProps,
 							c._nextState,
@@ -146,8 +143,7 @@ export function diff(
 					if (newVNode._original !== oldVNode._original) c._dirty = false;
 					c._vnode = newVNode;
 					newVNode._dom = oldVNode._dom;
-					newVNode._children = oldVNode._children;
-					newVNode._children.some(vnode => {
+					(newVNode._children = oldVNode._children).some(vnode => {
 						if (vnode) vnode._parent = newVNode;
 					});
 					if (c._renderCallbacks.length) {
@@ -157,11 +153,11 @@ export function diff(
 					break outer;
 				}
 
-				if (c.componentWillUpdate != null) {
+				if (c.componentWillUpdate) {
 					c.componentWillUpdate(newProps, c._nextState, componentContext);
 				}
 
-				if (c.componentDidUpdate != null) {
+				if (c.componentDidUpdate) {
 					c._renderCallbacks.push(() => {
 						c.componentDidUpdate(oldProps, oldState, snapshot);
 					});
@@ -183,16 +179,15 @@ export function diff(
 			// Handle setState called in render, see #2553
 			c.state = c._nextState;
 
-			if (c.getChildContext != null) {
+			if (c.getChildContext) {
 				globalContext = assign({}, globalContext, c.getChildContext());
 			}
 
-			if (!isNew && c.getSnapshotBeforeUpdate != null) {
+			if (!isNew && c.getSnapshotBeforeUpdate) {
 				snapshot = c.getSnapshotBeforeUpdate(oldProps, oldState);
 			}
 
-			let isTopLevelFragment =
-				tmp != null && tmp.type === Fragment && tmp.key == null;
+			let isTopLevelFragment = tmp && tmp.type === Fragment && tmp.key == null;
 			let renderResult = isTopLevelFragment ? tmp.props.children : tmp;
 
 			diffChildren(
@@ -408,7 +403,7 @@ function diffElementNodes(
 				i !== 'key' &&
 				i !== 'value' &&
 				i !== 'checked' &&
-				oldProps[i] !== newProps[i]
+				newProps[i] !== oldProps[i]
 			) {
 				setProperty(dom, i, newProps[i], oldProps[i], isSvg);
 			}
@@ -468,11 +463,14 @@ function diffElementNodes(
  * @param {import('../internal').VNode} vnode
  */
 export function applyRef(ref, value, vnode) {
-	try {
-		if (typeof ref == 'function') ref(value);
-		else ref.current = value;
-	} catch (e) {
-		options._catchError(e, vnode);
+	if (typeof ref == 'function') {
+		try {
+			ref(value);
+		} catch (e) {
+			options._catchError(e, vnode);
+		}
+	} else {
+		ref.current = value;
 	}
 }
 
@@ -489,11 +487,11 @@ export function unmount(vnode, parentVNode, skipRemove) {
 
 	if ((r = options.unmount)) r(vnode);
 
-	if ((r = vnode.ref)) {
-		if (!r.current || r.current === vnode._dom) applyRef(r, null, parentVNode);
+	if ((r = vnode.ref) && (!r.current || r.current === vnode._dom)) {
+		applyRef(r, null, parentVNode);
 	}
 
-	if ((r = vnode._component) != null) {
+	if ((r = vnode._component)) {
 		if (r.componentWillUnmount) {
 			try {
 				r.componentWillUnmount();
@@ -506,14 +504,16 @@ export function unmount(vnode, parentVNode, skipRemove) {
 	}
 
 	if ((r = vnode._children)) {
-		for (let i = 0; i < r.length; i++) {
-			if (r[i]) {
-				unmount(r[i], parentVNode, typeof vnode.type != 'function');
-			}
+		for (
+			let v, skip = typeof vnode.type != 'function', i = 0;
+			i < r.length;
+			i++
+		) {
+			if ((v = r[i])) unmount(v, parentVNode, skip);
 		}
 	}
 
-	if (!skipRemove && vnode._dom != null) removeNode(vnode._dom);
+	if (!skipRemove && (r = vnode._dom)) removeNode(r);
 
 	// Must be set to `undefined` to properly clean up `_nextDom`
 	// for which `null` is a valid value. See comment in `create-element.js`
