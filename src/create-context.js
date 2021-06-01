@@ -49,7 +49,7 @@ export function createContext(defaultValue, contextId) {
 					let old = c.componentWillUnmount;
 					if (!old || !old._removesSubs) {
 						(c.componentWillUnmount = () => {
-							subs = [];
+							subs.length = 0;
 							if (old) old.call(c);
 							// @ts-ignore
 						})._removesSubs = true;
