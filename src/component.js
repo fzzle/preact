@@ -135,7 +135,7 @@ function renderComponent(component) {
 			oldVNode,
 			component._globalContext,
 			'ownerSVGElement' in parentDom,
-			vnode._hydrating != null ? [oldDom] : null,
+			vnode._hydrating && [oldDom],
 			commitQueue,
 			oldDom || getDomSibling(vnode),
 			vnode._hydrating
