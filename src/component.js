@@ -137,7 +137,7 @@ function renderComponent(component) {
 			'ownerSVGElement' in parentDom,
 			vnode._hydrating != null ? [oldDom] : null,
 			commitQueue,
-			oldDom == null ? getDomSibling(vnode) : oldDom,
+			oldDom || getDomSibling(vnode),
 			vnode._hydrating
 		);
 
