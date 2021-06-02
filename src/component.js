@@ -144,18 +144,15 @@ function renderComponent(component) {
 		commitRoot(commitQueue, vnode);
 
 		if (vnode._dom != oldDom) {
-			let i;
-			while ((vnode = vnode._parent) && vnode._component != null) {
-				vnode._dom = vnode._component.base = null;
-				// Use `commitQueue` for `children`.
-				commitQueue = vnode._children;
-				for (i = 0; i < commitQueue.length; i++) {
+			outer: while ((vnode = vnode._parent) && vnode._component) {
+				for (let i = 0; i < vnode._children.length; i++) {
 					// Use `oldVNode` for `child`.
-					if ((oldVNode = commitQueue[i]) && oldVNode._dom != null) {
+					if ((oldVNode = vnode._children[i]) && oldVNode._dom) {
 						vnode._dom = vnode._component.base = oldVNode._dom;
-						break;
+						continue outer;
 					}
 				}
+				vnode._dom = vnode._component.base = null;
 			}
 		}
 	}
@@ -203,7 +200,6 @@ export function enqueueRender(c) {
 		((prevDebounce = options.debounceRendering) || defer)(process);
 	}
 }
-
 
 /** Flush the render queue by rerendering all queued components */
 function process() {
