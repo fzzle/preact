@@ -28,9 +28,9 @@ export function render(vnode, parentDom, replaceNode) {
 	// this by assigning a new `_children` property to DOM nodes which points
 	// to the last rendered tree. By default this property is not present,
 	// which means that we are mounting a new tree for the first time.
-	let oldVNode = isHydrating
-		? null
-		: (replaceNode && replaceNode._children) || parentDom._children;
+	let oldVNode =
+		(replaceNode && replaceNode._children) ||
+		(isHydrating ? null : parentDom._children);
 
 	vnode = (replaceNode || parentDom)._children = createVNode(
 		Fragment,
