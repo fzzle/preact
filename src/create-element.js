@@ -1,4 +1,4 @@
-import { slice } from './util';
+import { assign, slice } from './util';
 import options from './options';
 
 let vnodeId = 0;
@@ -12,29 +12,22 @@ let vnodeId = 0;
  * @returns {import('./internal').VNode}
  */
 export function createElement(type, props, children) {
-	let normalizedProps = {},
-		key,
+	let key,
 		ref,
-		i;
-	for (i in props) {
-		if (i == 'key') key = props[i];
-		else if (i == 'ref') ref = props[i];
-		else normalizedProps[i] = props[i];
-	}
+		normalizedProps = assign(
+			{},
+			typeof type == 'function' ? type.defaultProps : null,
+			props
+		);
 
 	if (arguments.length > 2) {
 		normalizedProps.children =
 			arguments.length > 3 ? slice.call(arguments, 2) : children;
 	}
 
-	// If a Component VNode, check for and apply defaultProps
-	// Note: type may be undefined in development, must never error here.
-	if (typeof type == 'function') {
-		for (i in type.defaultProps) {
-			if (normalizedProps[i] === undefined) {
-				normalizedProps[i] = type.defaultProps[i];
-			}
-		}
+	if (props) {
+		if (key = props.key) delete normalizedProps.key;
+		if (ref = props.ref) delete normalizedProps.ref;
 	}
 
 	return createVNode(type, normalizedProps, key, ref);
