@@ -127,7 +127,7 @@ function renderComponent(component) {
 			oldDom = vnode._dom,
 			oldVNode = assign({}, vnode);
 
-		oldVNode._original++;
+		oldVNode._original += 1;
 
 		diff(
 			parentDom,
